@@ -129,25 +129,33 @@ elif menu == "Configuración":
     st.sidebar.success("🎉 Configuración completa")
 elif menu == "Percentil 75":
     st.subheader("📊 Mapa con los valores más altos de All Sky Surface Shortwave Downward Irradiance")
-    percentil_75 = df_all["ALLSKY_KT"].quantile(0.75)
+    
+    # Calcular el promedio de ALLSKY_KT para cada latitud y longitud
+    df_promedio = df_all.groupby(['LAT', 'LON'])['ALLSKY_KT'].mean().reset_index()
 
-    # Filtrar los puntos mayores al percentil 75
-    df_puntos_altos = df_all[df_all["ALLSKY_KT"] > percentil_75]
+    # Calcular el percentil 75 de ALLSKY_KT en todo el DataFrame
+    percentil_75 = df_all['ALLSKY_KT'].quantile(0.75)
 
-    # Añadir los puntos a un mapa con CircleMarker
+    # Filtrar los puntos donde el promedio de ALLSKY_KT es mayor al percentil 75
+    df_puntos_altos = df_promedio[df_promedio['ALLSKY_KT'] > percentil_75]
+
+    # Crear un mapa con folium
+    mapa = folium.Map(location=[df_puntos_altos['LAT'].mean(), df_puntos_altos['LON'].mean()], zoom_start=6)
+
+    # Añadir los puntos con valores mayores al percentil 75
     for _, row in df_puntos_altos.iterrows():
         folium.CircleMarker(
             location=[row['LAT'], row['LON']],
-            radius=6,
+            radius=8,
             color="red",
             fill=True,
             fill_color="red",
             fill_opacity=0.6,
-            popup=f"ALLSKY_KT: {row['ALLSKY_KT']}",
+            popup=f"Lat: {row['LAT']} - Lon: {row['LON']}<br>Promedio ALLSKY_KT: {row['ALLSKY_KT']:.2f}",
         ).add_to(mapa)
 
     # Mostrar el mapa con los puntos rojos
-    st.subheader("🌍 Mapa con Puntos Mayores al Percentil 75")
+    st.subheader("🌍 Mapa de Puntos Mayores al Percentil 75")
     st_folium(mapa, width=700, height=400)
 
 # Ejecución del Script
