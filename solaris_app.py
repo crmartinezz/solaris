@@ -84,7 +84,7 @@ elif menu == "Visualización":
         df_filtrado_lat_lon,
         x="Fecha",
         y=["ALLSKY_KT"],
-        title=f"Comparación entre ALLSKY_KT y ALLSKY_SFC_SW_DWN en Lat: {lat} y Lon: {lon} en el año {año}",
+        title=f"All Sky Surface Shortwave Downward Irradiance (kW/m²/day) en Lat: {lat} y Lon: {lon} en el año {año}",
         labels={"Fecha": "Fecha", "value": "Valor", "variable": "Variable"},
         line_shape='linear',  # Línea recta entre puntos
         template="plotly_dark"  # Establecer el tema oscuro
@@ -99,7 +99,7 @@ elif menu == "Visualización":
         df_filtrado_lat_lon,
         x="Fecha",
         y=["ALLSKY_SFC_SW_DWN"],
-        title=f"Comparación entre ALLSKY_KT y ALLSKY_SFC_SW_DWN en Lat: {lat} y Lon: {lon} en el año {año}",
+        title=f"All Sky Insolation Clearness Index en Lat: {lat} y Lon: {lon} en el año {año}",
         labels={"Fecha": "Fecha", "value": "Valor", "variable": "Variable"},
         line_shape='linear',  # Línea recta entre puntos
         template="plotly_dark"  # Establecer el tema oscuro
