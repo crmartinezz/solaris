@@ -31,7 +31,7 @@ df_all['Fecha'] = pd.to_datetime(df_all.astype(str).loc[:, ["YEAR", "MO", "DY"]]
 # Menú de navegación en la barra lateral
 menu = st.sidebar.selectbox(
     "Selecciona una opción:",
-    ["Inicio", "Datos", "Visualización", "Matriz de Correlación", "Percentil 75", "Configuración"]
+    ["Inicio", "Datos", "Visualización", "Matriz de Correlación", "Percentil 75", "Percentil 50", "Configuración"]
 )
 
 # Si el usuario selecciona "Datos", muestra los datos en formato de tabla
