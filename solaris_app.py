@@ -12,7 +12,7 @@ st.title("🌍 Visualización de Datos Climáticos")
 st.sidebar.title("🔍 Opciones de Navegación")
 
 # Cargar el archivo CSV desde el proyecto
-@st.cache
+@st.cache_data
 def cargar_datos():
     # Aquí deberías cargar los datos de tu repositorio de GitHub.
     # Asumiendo que tienes el archivo en el mismo directorio donde está este script.
