@@ -129,10 +129,10 @@ elif menu == "Configuración":
     st.sidebar.success("🎉 Configuración completa")
 elif menu == "Percentil 75":
     st.subheader("📊 Mapa con los valores más altos de All Sky Surface Shortwave Downward Irradiance")
-    percentil_75 = df_filtrado_lat_lon["ALLSKY_KT"].quantile(0.75)
+    percentil_75 = df_filtrado["ALLSKY_KT"].quantile(0.75)
 
     # Filtrar los puntos mayores al percentil 75
-    df_puntos_altos = df_filtrado_lat_lon[df_filtrado_lat_lon["ALLSKY_KT"] > percentil_75]
+    df_puntos_altos = df_filtrado[df_filtrado["ALLSKY_KT"] > percentil_75]
 
     # Añadir los puntos a un mapa con CircleMarker
     for _, row in df_puntos_altos.iterrows():
