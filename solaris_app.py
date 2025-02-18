@@ -1,6 +1,9 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import folium
+from folium.plugins import MarkerCluster
+from streamlit_folium import st_folium  # Importar la librería para usar folium en Streamlit
 
 # Configuración de la página de Streamlit
 st.set_page_config(
@@ -76,6 +79,20 @@ elif menu == "Visualización":
 
     # Mostrar el gráfico interactivo
     st.plotly_chart(fig)
+
+    # Crear un mapa con folium centrado en la latitud y longitud seleccionadas
+    mapa = folium.Map(location=[lat, lon], zoom_start=10)
+    
+    # Añadir un marcador en la ubicación seleccionada
+    folium.Marker(
+        location=[lat, lon],
+        popup=f"Lat: {lat}, Lon: {lon}",
+        icon=folium.Icon(color="blue")
+    ).add_to(mapa)
+
+    # Mostrar el mapa en Streamlit
+    st.subheader("🌍 Mapa de Ubicación")
+    st_folium(mapa, width=700, height=400)
 
 # Si el usuario selecciona "Configuración", muestra la configuración
 elif menu == "Configuración":
