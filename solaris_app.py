@@ -130,23 +130,45 @@ elif menu == "Configuración":
     
 elif menu == "Percentil 75":
     st.subheader("📊 Mapa con los valores más altos de All Sky Surface Shortwave Downward Irradiance")
-    
-    # Calcular el promedio de ALLSKY_KT para cada latitud y longitud
     df_promedio = df_all.groupby(['LAT', 'LON'])['ALLSKY_KT'].mean().reset_index()
-
-    # Calcular el percentil 75 de ALLSKY_KT en todo el DataFrame
     percentil_75 = df_all['ALLSKY_KT'].quantile(0.75)
-
-    # Filtrar los puntos donde el promedio de ALLSKY_KT es mayor al percentil 75
     df_puntos_altos = df_promedio[df_promedio['ALLSKY_KT'] > percentil_75]
-
-    # Filtrar los puntos donde el promedio de ALLSKY_KT es menor o igual al percentil 75
     df_puntos_bajos = df_promedio[df_promedio['ALLSKY_KT'] <= percentil_75]
-
-    # Crear un mapa con folium
     mapa = folium.Map(location=[df_promedio['LAT'].mean(), df_promedio['LON'].mean()], zoom_start=6)
 
-    # Añadir los puntos con valores mayores al percentil 75 (color rojo)
+    for _, row in df_puntos_altos.iterrows():
+        folium.CircleMarker(
+            location=[row['LAT'], row['LON']],
+            radius=8,  # Radio fijo para los puntos altos
+            color="red",
+            fill=True,
+            fill_color="red",
+            fill_opacity=0.6,
+            popup=f"Lat: {row['LAT']} - Lon: {row['LON']}<br>Promedio ALLSKY_KT: {row['ALLSKY_KT']:.2f}",
+        ).add_to(mapa)
+    for _, row in df_puntos_bajos.iterrows():
+        # Asignar tamaño proporcional al valor de ALLSKY_KT
+        radius = 4 + (row['ALLSKY_KT'] / df_promedio['ALLSKY_KT'].max()) * 10  # Escala de tamaño
+        folium.CircleMarker(
+            location=[row['LAT'], row['LON']],
+            radius=radius,
+            color="blue",
+            fill=True,
+            fill_color="blue",
+            fill_opacity=0.6,
+            popup=f"Lat: {row['LAT']} - Lon: {row['LON']}<br>Promedio ALLSKY_KT: {row['ALLSKY_KT']:.2f}",
+        ).add_to(mapa)
+    st.subheader("🌍 Mapa de Puntos Mayores y Menores al Percentil 75")
+    st_folium(mapa, width=700, height=400)
+
+elif menu == "Percentil 50":
+    st.subheader("📊 Mapa con los valores más altos de All Sky Surface Shortwave Downward Irradiance")
+
+    df_promedio = df_all.groupby(['LAT', 'LON'])['ALLSKY_KT'].mean().reset_index()
+    percentil_50 = df_all['ALLSKY_KT'].quantile(0.50)
+    df_puntos_altos = df_promedio[df_promedio['ALLSKY_KT'] > percentil_50]
+    df_puntos_bajos = df_promedio[df_promedio['ALLSKY_KT'] <= percentil_50]
+    mapa = folium.Map(location=[df_promedio['LAT'].mean(), df_promedio['LON'].mean()], zoom_start=6)
     for _, row in df_puntos_altos.iterrows():
         folium.CircleMarker(
             location=[row['LAT'], row['LON']],
@@ -158,7 +180,6 @@ elif menu == "Percentil 75":
             popup=f"Lat: {row['LAT']} - Lon: {row['LON']}<br>Promedio ALLSKY_KT: {row['ALLSKY_KT']:.2f}",
         ).add_to(mapa)
 
-    # Añadir los puntos con valores menores o iguales al percentil 75 (color azul)
     for _, row in df_puntos_bajos.iterrows():
         # Asignar tamaño proporcional al valor de ALLSKY_KT
         radius = 4 + (row['ALLSKY_KT'] / df_promedio['ALLSKY_KT'].max()) * 10  # Escala de tamaño
@@ -173,10 +194,8 @@ elif menu == "Percentil 75":
             popup=f"Lat: {row['LAT']} - Lon: {row['LON']}<br>Promedio ALLSKY_KT: {row['ALLSKY_KT']:.2f}",
         ).add_to(mapa)
 
-    # Mostrar el mapa con los puntos rojos y azules
-    st.subheader("🌍 Mapa de Puntos Mayores y Menores al Percentil 75")
+    st.subheader("🌍 Mapa de Puntos Mayores y Menores al Percentil 50")
     st_folium(mapa, width=700, height=400)
-
 
 # Ejecución del Script
 if __name__ == "__main__":
