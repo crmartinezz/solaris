@@ -65,22 +65,8 @@ elif menu == "Visualización":
 
     # Filtrar los datos según la latitud y longitud seleccionadas
     df_filtrado_lat_lon = df_filtrado[(df_filtrado["LAT"] == lat) & (df_filtrado["LON"] == lon)]
-
-    # Crear gráfico interactivo de líneas con Plotly
-    fig = px.line(
-        df_filtrado_lat_lon,
-        x="Fecha",
-        y=["ALLSKY_KT", "ALLSKY_SFC_SW_DWN"],
-        title=f"Comparación entre ALLSKY_KT y ALLSKY_SFC_SW_DWN en Lat: {lat} y Lon: {lon} en el año {año}",
-        labels={"Fecha": "Fecha", "value": "Valor", "variable": "Variable"},
-        line_shape='linear',  # Línea recta entre puntos
-        template="plotly_dark"  # Establecer el tema oscuro
-    )
-
-    # Mostrar el gráfico interactivo
-    st.plotly_chart(fig)
-
-    # Crear un mapa con folium centrado en la latitud y longitud seleccionadas
+    
+ # Crear un mapa con folium centrado en la latitud y longitud seleccionadas
     mapa = folium.Map(location=[lat, lon], zoom_start=10)
     
     # Añadir un marcador en la ubicación seleccionada
@@ -93,6 +79,33 @@ elif menu == "Visualización":
     # Mostrar el mapa en Streamlit
     st.subheader("🌍 Mapa de Ubicación")
     st_folium(mapa, width=700, height=400)
+    # Crear gráfico interactivo de líneas con Plotly
+    fig = px.line(
+        df_filtrado_lat_lon,
+        x="Fecha",
+        y=["ALLSKY_KT"],
+        title=f"Comparación entre ALLSKY_KT y ALLSKY_SFC_SW_DWN en Lat: {lat} y Lon: {lon} en el año {año}",
+        labels={"Fecha": "Fecha", "value": "Valor", "variable": "Variable"},
+        line_shape='linear',  # Línea recta entre puntos
+        template="plotly_dark"  # Establecer el tema oscuro
+    )
+
+    # Mostrar el gráfico interactivo
+    st.plotly_chart(fig)
+
+       # Crear gráfico interactivo de líneas con Plotly
+    fig = px.line(
+        df_filtrado_lat_lon,
+        x="Fecha",
+        y=["ALLSKY_SFC_SW_DWN"],
+        title=f"Comparación entre ALLSKY_KT y ALLSKY_SFC_SW_DWN en Lat: {lat} y Lon: {lon} en el año {año}",
+        labels={"Fecha": "Fecha", "value": "Valor", "variable": "Variable"},
+        line_shape='linear',  # Línea recta entre puntos
+        template="plotly_dark"  # Establecer el tema oscuro
+    )
+
+    # Mostrar el gráfico interactivo
+    st.plotly_chart(fig)
 
 # Si el usuario selecciona "Configuración", muestra la configuración
 elif menu == "Configuración":
