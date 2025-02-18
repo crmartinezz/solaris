@@ -127,6 +127,7 @@ elif menu == "Matriz de Correlación":
 # Si el usuario selecciona "Configuración", muestra la configuración
 elif menu == "Configuración":
     st.sidebar.success("🎉 Configuración completa")
+    
 elif menu == "Percentil 75":
     st.subheader("📊 Mapa con los valores más altos de All Sky Surface Shortwave Downward Irradiance")
     
@@ -139,14 +140,17 @@ elif menu == "Percentil 75":
     # Filtrar los puntos donde el promedio de ALLSKY_KT es mayor al percentil 75
     df_puntos_altos = df_promedio[df_promedio['ALLSKY_KT'] > percentil_75]
 
-    # Crear un mapa con folium
-    mapa = folium.Map(location=[df_puntos_altos['LAT'].mean(), df_puntos_altos['LON'].mean()], zoom_start=6)
+    # Filtrar los puntos donde el promedio de ALLSKY_KT es menor o igual al percentil 75
+    df_puntos_bajos = df_promedio[df_promedio['ALLSKY_KT'] <= percentil_75]
 
-    # Añadir los puntos con valores mayores al percentil 75
+    # Crear un mapa con folium
+    mapa = folium.Map(location=[df_promedio['LAT'].mean(), df_promedio['LON'].mean()], zoom_start=6)
+
+    # Añadir los puntos con valores mayores al percentil 75 (color rojo)
     for _, row in df_puntos_altos.iterrows():
         folium.CircleMarker(
             location=[row['LAT'], row['LON']],
-            radius=8,
+            radius=8,  # Radio fijo para los puntos altos
             color="red",
             fill=True,
             fill_color="red",
@@ -154,9 +158,25 @@ elif menu == "Percentil 75":
             popup=f"Lat: {row['LAT']} - Lon: {row['LON']}<br>Promedio ALLSKY_KT: {row['ALLSKY_KT']:.2f}",
         ).add_to(mapa)
 
-    # Mostrar el mapa con los puntos rojos
-    st.subheader("🌍 Mapa de Puntos Mayores al Percentil 75")
+    # Añadir los puntos con valores menores o iguales al percentil 75 (color azul)
+    for _, row in df_puntos_bajos.iterrows():
+        # Asignar tamaño proporcional al valor de ALLSKY_KT
+        radius = 4 + (row['ALLSKY_KT'] / df_promedio['ALLSKY_KT'].max()) * 10  # Escala de tamaño
+
+        folium.CircleMarker(
+            location=[row['LAT'], row['LON']],
+            radius=radius,
+            color="blue",
+            fill=True,
+            fill_color="blue",
+            fill_opacity=0.6,
+            popup=f"Lat: {row['LAT']} - Lon: {row['LON']}<br>Promedio ALLSKY_KT: {row['ALLSKY_KT']:.2f}",
+        ).add_to(mapa)
+
+    # Mostrar el mapa con los puntos rojos y azules
+    st.subheader("🌍 Mapa de Puntos Mayores y Menores al Percentil 75")
     st_folium(mapa, width=700, height=400)
+
 
 # Ejecución del Script
 if __name__ == "__main__":
