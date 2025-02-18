@@ -14,13 +14,14 @@ st.sidebar.title("🔍 Opciones de Navegación")
 # Cargar el archivo CSV desde el proyecto
 @st.cache_data
 def cargar_datos():
-    # Aquí deberías cargar los datos de tu repositorio de GitHub.
-    # Asumiendo que tienes el archivo en el mismo directorio donde está este script.
     df = pd.read_csv("datos_unificados.csv")
     return df
 
 # Cargar los datos
 df_all = cargar_datos()
+
+# Crear una nueva columna 'Fecha' combinando 'YEAR', 'MO', 'DY'
+df_all['Fecha'] = pd.to_datetime(df_all.astype(str).loc[:, ["YEAR", "MO", "DY"]].agg('-'.join, axis=1))
 
 # Menú de navegación en la barra lateral
 menu = st.sidebar.selectbox(
@@ -46,12 +47,10 @@ elif menu == "Visualización":
     # Filtro por rango de fechas
     fecha_inicio, fecha_fin = st.sidebar.date_input(
         "Selecciona el rango de fechas:",
-        [df_filtrado["MO"].min(), df_filtrado["MO"].max()]
+        [df_filtrado["Fecha"].min(), df_filtrado["Fecha"].max()]
     )
 
-    # Convertir las columnas "MO" y "DY" a una columna de fecha
-    df_filtrado["Fecha"] = pd.to_datetime(df_filtrado.astype(str).loc[:, ["YEAR", "MO", "DY"]].agg('-'.join, axis=1))
-
+    # Filtrar los datos según el rango de fechas
     df_filtrado = df_filtrado[(df_filtrado["Fecha"] >= pd.to_datetime(fecha_inicio)) & (df_filtrado["Fecha"] <= pd.to_datetime(fecha_fin))]
 
     # Crear gráfico interactivo de líneas con Plotly
