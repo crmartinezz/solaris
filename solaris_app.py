@@ -88,8 +88,9 @@ elif menu == "Visualización":
         labels={"Fecha": "Fecha", "value": "Valor", "variable": "Variable"},
         line_shape='linear',  # Línea recta entre puntos
         template="plotly_dark"  # Establecer el tema oscuro
+    
     )
-
+    fig.update_traces(line=dict(color='red'))
     # Mostrar el gráfico interactivo
     st.plotly_chart(fig)
 
