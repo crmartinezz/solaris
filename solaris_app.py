@@ -31,7 +31,7 @@ df_all['Fecha'] = pd.to_datetime(df_all.astype(str).loc[:, ["YEAR", "MO", "DY"]]
 # Menú de navegación en la barra lateral
 menu = st.sidebar.selectbox(
     "Selecciona una opción:",
-    ["Inicio", "Datos", "Visualización", "Matriz de Correlación", "Configuración"]
+    ["Inicio", "Datos", "Visualización", "Matriz de Correlación", "Percentil 75", "Configuración"]
 )
 
 # Si el usuario selecciona "Datos", muestra los datos en formato de tabla
@@ -127,7 +127,28 @@ elif menu == "Matriz de Correlación":
 # Si el usuario selecciona "Configuración", muestra la configuración
 elif menu == "Configuración":
     st.sidebar.success("🎉 Configuración completa")
+elif menu == "Percentil 75":
+    st.subheader("📊 Mapa con los valores más altos de All Sky Surface Shortwave Downward Irradiance")
+    percentil_75 = df_filtrado_lat_lon["ALLSKY_KT"].quantile(0.75)
 
+    # Filtrar los puntos mayores al percentil 75
+    df_puntos_altos = df_filtrado_lat_lon[df_filtrado_lat_lon["ALLSKY_KT"] > percentil_75]
+
+    # Añadir los puntos a un mapa con CircleMarker
+    for _, row in df_puntos_altos.iterrows():
+        folium.CircleMarker(
+            location=[row['LAT'], row['LON']],
+            radius=6,
+            color="red",
+            fill=True,
+            fill_color="red",
+            fill_opacity=0.6,
+            popup=f"ALLSKY_KT: {row['ALLSKY_KT']}",
+        ).add_to(mapa)
+
+    # Mostrar el mapa con los puntos rojos
+    st.subheader("🌍 Mapa con Puntos Mayores al Percentil 75")
+    st_folium(mapa, width=700, height=400)
 
 # Ejecución del Script
 if __name__ == "__main__":
