@@ -127,7 +127,7 @@ elif menu == "Matriz de Correlación":
 # Si el usuario selecciona "Configuración", muestra la configuración
 elif menu == "Configuración":
     st.sidebar.success("🎉 Configuración completa")
-    st.subheader("🗣️🗣️🗣️ Alejandro no hace un hijueputa culo en los trabajos grupales")
+    
 elif menu == "Percentil 75":
     st.subheader("📊 Mapa con los valores más altos de All Sky Surface Shortwave Downward Irradiance")
     df_promedio = df_all.groupby(['LAT', 'LON'])['ALLSKY_KT'].mean().reset_index()
