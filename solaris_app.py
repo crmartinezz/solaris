@@ -203,4 +203,4 @@ elif menu == "Percentiles":
 
 # Ejecución del Script
 if __name__ == "__main__":
-    st.sidebar.info("Ejecuta este script con: streamlit run <nombre-del-script>.py")
+    st.sidebar.info("Ejecuta este script con: streamlit run solaris_app.py.py")
