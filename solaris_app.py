@@ -31,7 +31,7 @@ df_all['Fecha'] = pd.to_datetime(df_all.astype(str).loc[:, ["YEAR", "MO", "DY"]]
 # Menú de navegación en la barra lateral
 menu = st.sidebar.selectbox(
     "Selecciona una opción:",
-    ["Inicio", "Datos", "Visualización","🗺 Mapa Principal","📊 Análisis Detallado", "Matriz de Correlación", "Percentil 75", "Percentil 50", "Configuración"]
+    ["Inicio", "Datos", "Visualización","Mapa Principal","Análisis Detallado", "Matriz de Correlación", "Percentil 75", "Percentil 50", "Configuración"]
 )
 def get_region(lat, lon):
     if lat > 8:
@@ -119,7 +119,7 @@ elif menu == "Visualización":
     # Mostrar el gráfico interactivo
     st.plotly_chart(fig)
 
-elif menu == "🗺 Mapa Principal":
+elif menu == "Mapa Principal":
     zoom_level = st.sidebar.slider("Nivel de Zoom", 4, 15, 6)
     st.subheader("🌍 Mapa de Radiación Solar en Colombia")
     fig = px.scatter_mapbox(
@@ -133,7 +133,7 @@ elif menu == "🗺 Mapa Principal":
     st.plotly_chart(fig, use_container_width=True)
 
 # Análisis Detallado
-elif menu == "📊 Análisis Detallado":
+elif menu == "Análisis Detallado":
     st.subheader("📈 Análisis de Datos Climáticos")
     region_avg = df_all.groupby('Region')['ALLSKY_SFC_SW_DWN'].mean()
     st.bar_chart(region_avg)
