@@ -31,7 +31,7 @@ df_all['Fecha'] = pd.to_datetime(df_all.astype(str).loc[:, ["YEAR", "MO", "DY"]]
 # Menú de navegación en la barra lateral
 menu = st.sidebar.selectbox(
     "Selecciona una opción:",
-    ["Inicio", "Datos", "Visualización", "Matriz de Correlación", "Percentil 75", "Percentil 50", "Configuración"]
+    ["Inicio", "Datos", "Visualización","🗺 Mapa Principal","📊 Análisis Detallado", "Matriz de Correlación", "Percentil 75", "Percentil 50", "Configuración"]
 )
 
 # Si el usuario selecciona "Datos", muestra los datos en formato de tabla
@@ -110,6 +110,28 @@ elif menu == "Visualización":
     # Mostrar el gráfico interactivo
     st.plotly_chart(fig)
 
+elif menu == "🗺 Mapa Principal":
+    zoom_level = st.sidebar.slider("Nivel de Zoom", 4, 15, 6)
+    st.subheader("🌍 Mapa de Radiación Solar en Colombia")
+    fig = px.scatter_mapbox(
+        df_all, lat='LAT', lon='LON', color='ALLSKY_KT',
+        size=[3]*len(df_all), hover_name='LAT', zoom=zoom_level,
+        color_continuous_scale='plasma', mapbox_style='open-street-map',
+        center={'lat': 4.5709, 'lon': -74.2973}
+    )
+    fig.update_traces(marker=dict(opacity=0.45))
+    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0}, height=700)
+    st.plotly_chart(fig, use_container_width=True)
+
+# Análisis Detallado
+elif menu == "📊 Análisis Detallado":
+    st.subheader("📈 Análisis de Datos Climáticos")
+    region_avg = df_all.groupby('Region')['ALLSKY_SFC_SW_DWN'].mean()
+    st.bar_chart(region_avg)
+    df_all['Viabilidad'] = (df_all['ALLSKY_SFC_SW_DWN'] * 0.6 + df_all['ALLSKY_KT'] * 0.4)
+    top3 = df_all.nlargest(3, 'Viabilidad')
+    for i, (_, row) in enumerate(top3.iterrows()):
+        st.metric(f"🥇 Ubicación {i+1}", f"{row['Viabilidad']:.2f} pts", f"Lat: {row['LAT']:.4f} Lon: {row['LON']:.4f}")
 # Si el usuario selecciona "Matriz de Correlación", muestra la matriz de correlación
 elif menu == "Matriz de Correlación":
     st.subheader("📊 Matriz de Correlación de Variables Climáticas")
