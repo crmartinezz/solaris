@@ -33,7 +33,16 @@ menu = st.sidebar.selectbox(
     "Selecciona una opción:",
     ["Inicio", "Datos", "Visualización","🗺 Mapa Principal","📊 Análisis Detallado", "Matriz de Correlación", "Percentil 75", "Percentil 50", "Configuración"]
 )
+def get_region(lat, lon):
+    if lat > 8:
+        return "Caribe"
+    elif lat < 2:
+        return "Sur"
+    elif lon < -75:
+        return "Pacífico"
+    return "Andina"
 
+df_all['Region'] = df_all.apply(lambda x: get_region(x['LAT'], x['LON']), axis=1)
 # Si el usuario selecciona "Datos", muestra los datos en formato de tabla
 if menu == "Datos":
     st.subheader("📂 Datos Disponibles")
