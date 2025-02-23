@@ -128,7 +128,7 @@ elif menu == "Mapa Principal":
         color_continuous_scale='plasma', mapbox_style='open-street-map',
         center={'lat': 4.5709, 'lon': -74.2973}
     )
-    fig.update_traces(marker=dict(opacity=0.3))  # Ajustando la opacidad de los puntos
+    fig.update_traces(marker=dict(opacity=0.8))  # Ajustando la opacidad de los puntos
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0}, height=700)
     st.plotly_chart(fig, use_container_width=True)
 
