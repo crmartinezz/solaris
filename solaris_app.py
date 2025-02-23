@@ -126,9 +126,9 @@ elif menu == "Mapa Principal":
         df_all, lat='LAT', lon='LON', color='ALLSKY_KT',
         size=[3]*len(df_all), hover_name='LAT', zoom=zoom_level,
         color_continuous_scale='plasma', mapbox_style='open-street-map',
-        center={'lat': 4.5709, 'lon': -74.2973}
+        center={'lat': 4.5709, 'lon': -74.2973},
+        opacity=0.15  # Ajustando la opacidad directamente en scatter_mapbox
     )
-    fig.update_traces(marker=dict(opacity=0.1))  # Ajustando la opacidad de los puntos
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0}, height=700)
     st.plotly_chart(fig, use_container_width=True)
 
